@@ -73,13 +73,6 @@ button {
 
 <div id="mainContent">
 
-<!-- Play button (backup for mobile autoplay block) -->
-<div style="margin-top:10px;">
-  <button id="playBtn" onclick="startMusic()" style="background:#fff;border:2px solid #ff4d6d;">
-    LOVE YOU PONDATI
-  </button>
-</div>
-
 <h1>LOVE YOU PONDATI (BABY MA)... ❤️</h1>
 <h2>SIVA SANKARE ❤️</h2>
 
@@ -94,25 +87,21 @@ button {
 
 <div class="footer">
   With lots of Love,<br>
-  <b>SANJAY KUMAR 💘</b>
+  <b>U R PURUSHAN SANJAY 💘</b>
 </div>
 
 </div>
 
 <script>
+
 const bgm = document.getElementById("bgm");
 
+// Start music on first user interaction (required by browsers)
 function startMusic() {
   bgm.volume = 0.9;
-  bgm.play().then(() => {
-    const btn = document.getElementById("playBtn");
-    if (btn) btn.style.display = "none";
-  }).catch(() => {
-    // If it still fails, user must increase volume/unmute
-  });
+  bgm.play().catch(() => {});
 }
 
-// Start music after first interaction (tap/click)
 document.addEventListener("click", startMusic, { once: true });
 document.addEventListener("touchstart", startMusic, { once: true });
 
@@ -149,6 +138,7 @@ setInterval(function(){
   document.body.appendChild(heart);
   setTimeout(function(){ heart.remove(); },6000);
 },500);
+
 </script>
 
 </body>
