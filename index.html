@@ -81,11 +81,25 @@
       from{ transform:translateY(0); opacity:1; }
       to{ transform:translateY(-110vh); opacity:0; }
     }
+
+    /* Optional tiny hint */
+    .hint{
+      position:fixed;
+      top:12px;
+      left:0;
+      right:0;
+      font-size:12px;
+      opacity:.75;
+      z-index:3;
+      pointer-events:none;
+    }
   </style>
 </head>
 
 <body>
-  <audio id="bgm" preload="auto" loop playsinline>
+  <div class="hint" id="hint">Tap anywhere to start music 🎵</div>
+
+  <audio id="bgm" preload="auto" loop>
     <source src="song.mp3" type="audio/mpeg" />
   </audio>
 
@@ -111,36 +125,36 @@
   </div>
 
   <script>
-    // MUSIC: strongest/most compatible "start on first touch"
+    // -------- MUSIC (Android reliable) --------
     const bgm = document.getElementById("bgm");
+    const hint = document.getElementById("hint");
     let musicStarted = false;
 
     async function startMusic() {
       if (musicStarted) return;
-      musicStarted = true;
 
       try {
         bgm.volume = 0.9;
+        await bgm.play();            // must be allowed by user gesture
+        musicStarted = true;
+        if (hint) hint.style.display = "none";
 
-        // iOS/Safari helper: tiny silent play/unmute trick
-        bgm.muted = true;
-        await bgm.play();
-        bgm.pause();
-        bgm.currentTime = 0;
-        bgm.muted = false;
-
-        // real play
-        await bgm.play();
+        // Once started, remove extra listeners
+        document.removeEventListener("click", startMusic, true);
+        document.removeEventListener("touchstart", startMusic, true);
+        document.removeEventListener("pointerdown", startMusic, true);
       } catch (e) {
-        // If blocked, allow retry on next tap
+        // If blocked, keep musicStarted=false so next tap tries again
         musicStarted = false;
       }
     }
 
-    // Use pointerdown only (covers touch + mouse)
-    document.addEventListener("pointerdown", startMusic, { passive: true });
+    // Capture phase helps in some in-app browsers
+    document.addEventListener("pointerdown", startMusic, true);
+    document.addEventListener("touchstart", startMusic, true);
+    document.addEventListener("click", startMusic, true);
 
-    // YES button final message
+    // -------- YES button --------
     const yesBtn = document.getElementById("yes");
     yesBtn.addEventListener("click", () => {
       startMusic();
@@ -160,7 +174,7 @@
       `;
     });
 
-    // NO button magic
+    // -------- NO button magic --------
     let yesSize = 18;
     let noCount = 0;
 
@@ -207,10 +221,9 @@
 
     noBtn.addEventListener("mouseover", moveButton);
     noBtn.addEventListener("click", moveButton);
-    // IMPORTANT: no preventDefault here (can break audio start on some mobiles)
-    noBtn.addEventListener("touchstart", moveButton, { passive: true });
+    noBtn.addEventListener("touchstart", moveButton, { passive:true });
 
-    // Floating hearts
+    // -------- Floating hearts --------
     setInterval(() => {
       const heart = document.createElement("div");
       heart.className = "heart";
