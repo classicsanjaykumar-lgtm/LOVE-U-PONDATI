@@ -1,4 +1,3 @@
-# LOVE-U-PONDATI
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,6 +7,7 @@ body {
   text-align: center;
   font-family: Arial, sans-serif;
   background-color: #ffe6f0;
+  overflow: hidden;
 }
 
 h1 {
@@ -50,12 +50,10 @@ function yesClick() {
 function moveButton() {
   var button = document.getElementById("no");
   button.style.position = "absolute";
-  button.style.left = Math.random() * window.innerWidth + "px";
-  button.style.top = Math.random() * window.innerHeight + "px";
+  button.style.left = Math.random() * (window.innerWidth - 100) + "px";
+  button.style.top = Math.random() * (window.innerHeight - 50) + "px";
 }
 </script>
 
 </body>
 </html>
-
-
