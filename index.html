@@ -66,7 +66,8 @@ button {
 
 <body>
 
-<audio autoplay loop>
+<!-- Background Music (mobile friendly) -->
+<audio id="bgm" loop>
   <source src="song.mp3" type="audio/mpeg">
 </audio>
 
@@ -88,6 +89,12 @@ button {
 </div>
 
 <script>
+
+// Start music on first click (required for phones)
+document.addEventListener("click", function() {
+  document.getElementById("bgm").play();
+}, { once: true });
+
 function yesClick() {
   document.body.innerHTML = `
     <h1 style="margin-top:100px;">My Baby Queen Said Yes 👑💘</h1>
@@ -121,6 +128,7 @@ setInterval(function(){
   document.body.appendChild(heart);
   setTimeout(function(){ heart.remove(); },6000);
 },500);
+
 </script>
 
 </body>
