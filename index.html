@@ -81,24 +81,10 @@
       from{ transform:translateY(0); opacity:1; }
       to{ transform:translateY(-110vh); opacity:0; }
     }
-
-    /* Optional tiny hint */
-    .hint{
-      position:fixed;
-      top:12px;
-      left:0;
-      right:0;
-      font-size:12px;
-      opacity:.75;
-      z-index:3;
-      pointer-events:none;
-    }
   </style>
 </head>
 
 <body>
-  <div class="hint" id="hint">Tap anywhere to start music 🎵</div>
-
   <audio id="bgm" preload="auto" loop>
     <source src="song.mp3" type="audio/mpeg" />
   </audio>
@@ -125,39 +111,32 @@
   </div>
 
   <script>
-    // -------- MUSIC (Android reliable) --------
+    // ✅ MUSIC: starts on any tap/click and retries until it succeeds
     const bgm = document.getElementById("bgm");
-    const hint = document.getElementById("hint");
     let musicStarted = false;
 
-    async function startMusic() {
+    function startMusic() {
       if (musicStarted) return;
+      bgm.volume = 0.9;
 
-      try {
-        bgm.volume = 0.9;
-        await bgm.play();            // must be allowed by user gesture
+      bgm.play().then(() => {
         musicStarted = true;
-        if (hint) hint.style.display = "none";
-
-        // Once started, remove extra listeners
-        document.removeEventListener("click", startMusic, true);
-        document.removeEventListener("touchstart", startMusic, true);
-        document.removeEventListener("pointerdown", startMusic, true);
-      } catch (e) {
-        // If blocked, keep musicStarted=false so next tap tries again
+      }).catch(() => {
+        // if blocked, keep musicStarted false so next tap tries again
         musicStarted = false;
-      }
+      });
     }
 
-    // Capture phase helps in some in-app browsers
+    // Works for both mobile + desktop
     document.addEventListener("pointerdown", startMusic, true);
-    document.addEventListener("touchstart", startMusic, true);
     document.addEventListener("click", startMusic, true);
+    document.addEventListener("touchstart", startMusic, { passive: true });
 
-    // -------- YES button --------
+    // YES button final message
     const yesBtn = document.getElementById("yes");
     yesBtn.addEventListener("click", () => {
-      startMusic();
+      startMusic(); // ✅ ensure music plays even if YES is first tap
+
       document.getElementById("mainContent").innerHTML = `
         <h1 style="margin-top:90px; padding:0 12px;">My Baby Queen Said Yes 👑💘</h1>
         <h2 style="padding:0 12px;">I Am The Luckiest Man Alive ❤️</h2>
@@ -174,7 +153,7 @@
       `;
     });
 
-    // -------- NO button magic --------
+    // NO button magic
     let yesSize = 18;
     let noCount = 0;
 
@@ -195,7 +174,7 @@
     const noBtn = document.getElementById("no");
 
     function moveButton(){
-      startMusic();
+      startMusic(); // ✅ ensure music plays even if NO is first tap
 
       noBtn.textContent = noMessages[noCount % noMessages.length];
       noCount++;
@@ -221,9 +200,10 @@
 
     noBtn.addEventListener("mouseover", moveButton);
     noBtn.addEventListener("click", moveButton);
-    noBtn.addEventListener("touchstart", moveButton, { passive:true });
+    // ✅ IMPORTANT: removed preventDefault (this was breaking audio on Android)
+    noBtn.addEventListener("touchstart", moveButton, { passive: true });
 
-    // -------- Floating hearts --------
+    // Floating hearts
     setInterval(() => {
       const heart = document.createElement("div");
       heart.className = "heart";
