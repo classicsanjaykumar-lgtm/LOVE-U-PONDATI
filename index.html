@@ -66,10 +66,12 @@ button {
 
 <body>
 
-<!-- Background Music (mobile friendly) -->
+<!-- Background Music -->
 <audio id="bgm" loop>
   <source src="song.mp3" type="audio/mpeg">
 </audio>
+
+<div id="mainContent">
 
 <h1>LOVE YOU PONDATI (BABY MA)... ❤️</h1>
 <h2>SIVA SANKARE ❤️</h2>
@@ -88,24 +90,26 @@ button {
   <b>SANJAY KUMAR 💘</b>
 </div>
 
+</div>
+
 <script>
 
-// Start music on first click (required for phones)
+// Start music automatically after first click anywhere
 document.addEventListener("click", function() {
   document.getElementById("bgm").play();
 }, { once: true });
 
 function yesClick() {
-  document.body.innerHTML = `
+  document.getElementById("mainContent").innerHTML = `
     <h1 style="margin-top:100px;">My Baby Queen Said Yes 👑💘</h1>
     <h2>I Am The Luckiest Man Alive ❤️</h2>
-    <p>
-      You are the reason I believe in love.<br>
-      You are my today, my tomorrow, and my always.<br><br>
-      I will protect, respect, and cherish you forever my world 💖
+    <p style="font-size:18px;">
+      From the moment you came into my life,<br>
+      everything became beautiful.<br><br>
+      I will love you, protect you, and stand by you forever 💖
     </p>
     <p>
-      With all my heart,<br>
+      Forever yours,<br>
       <b>U R PURUSHAN SANJAY 💘</b>
     </p>
   `;
