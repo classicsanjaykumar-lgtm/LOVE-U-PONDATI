@@ -111,9 +111,11 @@
   </div>
 
   <script>
-    // ✅ MUSIC: starts on any tap/click and retries until it succeeds
     const bgm = document.getElementById("bgm");
     let musicStarted = false;
+
+    // ✅ Ensure loop always ON
+    bgm.loop = true;
 
     function startMusic() {
       if (musicStarted) return;
@@ -122,20 +124,19 @@
       bgm.play().then(() => {
         musicStarted = true;
       }).catch(() => {
-        // if blocked, keep musicStarted false so next tap tries again
-        musicStarted = false;
+        musicStarted = false; // try again on next click/tap
       });
     }
 
-    // Works for both mobile + desktop
-    document.addEventListener("pointerdown", startMusic, true);
-    document.addEventListener("click", startMusic, true);
+    // ✅ Start music on click anywhere (mobile + desktop)
+    document.addEventListener("click", startMusic);
     document.addEventListener("touchstart", startMusic, { passive: true });
 
     // YES button final message
     const yesBtn = document.getElementById("yes");
     yesBtn.addEventListener("click", () => {
-      startMusic(); // ✅ ensure music plays even if YES is first tap
+      startMusic();     // ✅ ensure music plays even if YES is first tap
+      bgm.loop = true;  // ✅ keep looping after YES
 
       document.getElementById("mainContent").innerHTML = `
         <h1 style="margin-top:90px; padding:0 12px;">My Baby Queen Said Yes 👑💘</h1>
@@ -200,7 +201,6 @@
 
     noBtn.addEventListener("mouseover", moveButton);
     noBtn.addEventListener("click", moveButton);
-    // ✅ IMPORTANT: removed preventDefault (this was breaking audio on Android)
     noBtn.addEventListener("touchstart", moveButton, { passive: true });
 
     // Floating hearts
