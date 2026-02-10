@@ -114,7 +114,7 @@
   </div>
 
   <script>
-    // MUSIC: starts on click/tap ANYWHERE on the screen (mobile + desktop)
+    // MUSIC: starts on ANY click/tap + also guaranteed on YES/NO button press
     const bgm = document.getElementById("bgm");
     let musicStarted = false;
 
@@ -125,6 +125,7 @@
       bgm.play().catch(() => {});
     }
 
+    // Start on ANY screen interaction
     document.body.addEventListener("click", startMusic);
     document.body.addEventListener("touchstart", startMusic);
     document.body.addEventListener("pointerdown", startMusic);
@@ -132,6 +133,8 @@
     // YES button final message
     const yesBtn = document.getElementById("yes");
     yesBtn.addEventListener("click", () => {
+      startMusic(); // ✅ ensure music plays even if YES is first tap
+
       document.getElementById("mainContent").innerHTML = `
         <h1 style="margin-top:90px; padding:0 12px;">My Baby Queen Said Yes 👑💘</h1>
         <h2 style="padding:0 12px;">I Am The Luckiest Man Alive ❤️</h2>
@@ -169,6 +172,8 @@
     const noBtn = document.getElementById("no");
 
     function moveButton(){
+      startMusic(); // ✅ ensure music plays even if NO is first tap
+
       // Change text
       noBtn.textContent = noMessages[noCount % noMessages.length];
       noCount++;
