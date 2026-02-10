@@ -84,9 +84,9 @@
 </head>
 
 <body>
-  <!-- Tip: make sure these files exist in the SAME folder as this HTML:
+  <!-- Keep these files in the SAME folder as this HTML:
        - song.mp3
-       - her.jpg.jpeg (or rename to her.jpg to avoid double extensions)
+       - her.jpg.jpeg
   -->
   <audio id="bgm" preload="auto" loop>
     <source src="song.mp3" type="audio/mpeg" />
@@ -114,14 +114,20 @@
   </div>
 
   <script>
-    // Music (mobile-friendly: starts after first tap/click)
+    // MUSIC: starts on click/tap ANYWHERE on the screen (mobile + desktop)
     const bgm = document.getElementById("bgm");
-    function startMusic(){
+    let musicStarted = false;
+
+    function startMusic() {
+      if (musicStarted) return;
+      musicStarted = true;
       bgm.volume = 0.9;
-      bgm.play().catch(()=>{});
+      bgm.play().catch(() => {});
     }
-    document.addEventListener("click", startMusic, { once:true });
-    document.addEventListener("touchstart", startMusic, { once:true });
+
+    document.body.addEventListener("click", startMusic);
+    document.body.addEventListener("touchstart", startMusic);
+    document.body.addEventListener("pointerdown", startMusic);
 
     // YES button final message
     const yesBtn = document.getElementById("yes");
