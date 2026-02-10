@@ -51,6 +51,7 @@
       cursor:pointer;
       transition: transform .2s, font-size .2s, padding .2s;
       user-select:none;
+      -webkit-tap-highlight-color: transparent;
     }
 
     #yes{ background:#ff4d6d; color:#fff; }
@@ -84,11 +85,7 @@
 </head>
 
 <body>
-  <!-- Keep these files in the SAME folder as this HTML:
-       - song.mp3
-       - her.jpg.jpeg
-  -->
-  <audio id="bgm" preload="auto" loop>
+  <audio id="bgm" preload="auto" loop playsinline>
     <source src="song.mp3" type="audio/mpeg" />
   </audio>
 
@@ -114,27 +111,39 @@
   </div>
 
   <script>
-    // MUSIC: starts on ANY click/tap + also guaranteed on YES/NO button press
+    // MUSIC: strongest/most compatible "start on first touch"
     const bgm = document.getElementById("bgm");
     let musicStarted = false;
 
-    function startMusic() {
+    async function startMusic() {
       if (musicStarted) return;
       musicStarted = true;
-      bgm.volume = 0.9;
-      bgm.play().catch(() => {});
+
+      try {
+        bgm.volume = 0.9;
+
+        // iOS/Safari helper: tiny silent play/unmute trick
+        bgm.muted = true;
+        await bgm.play();
+        bgm.pause();
+        bgm.currentTime = 0;
+        bgm.muted = false;
+
+        // real play
+        await bgm.play();
+      } catch (e) {
+        // If blocked, allow retry on next tap
+        musicStarted = false;
+      }
     }
 
-    // Start on ANY screen interaction
-    document.body.addEventListener("click", startMusic);
-    document.body.addEventListener("touchstart", startMusic);
-    document.body.addEventListener("pointerdown", startMusic);
+    // Use pointerdown only (covers touch + mouse)
+    document.addEventListener("pointerdown", startMusic, { passive: true });
 
     // YES button final message
     const yesBtn = document.getElementById("yes");
     yesBtn.addEventListener("click", () => {
-      startMusic(); // ✅ ensure music plays even if YES is first tap
-
+      startMusic();
       document.getElementById("mainContent").innerHTML = `
         <h1 style="margin-top:90px; padding:0 12px;">My Baby Queen Said Yes 👑💘</h1>
         <h2 style="padding:0 12px;">I Am The Luckiest Man Alive ❤️</h2>
@@ -151,7 +160,7 @@
       `;
     });
 
-    // NO button magic (kept inside screen!)
+    // NO button magic
     let yesSize = 18;
     let noCount = 0;
 
@@ -172,13 +181,11 @@
     const noBtn = document.getElementById("no");
 
     function moveButton(){
-      startMusic(); // ✅ ensure music plays even if NO is first tap
+      startMusic();
 
-      // Change text
       noBtn.textContent = noMessages[noCount % noMessages.length];
       noCount++;
 
-      // Move randomly but keep on-screen
       noBtn.style.position = "fixed";
 
       const padding = 10;
@@ -192,7 +199,6 @@
       noBtn.style.left = x + "px";
       noBtn.style.top  = y + "px";
 
-      // Grow YES button
       yesSize += 6;
       yesBtn.style.fontSize = yesSize + "px";
       yesBtn.style.padding =
@@ -201,7 +207,8 @@
 
     noBtn.addEventListener("mouseover", moveButton);
     noBtn.addEventListener("click", moveButton);
-    noBtn.addEventListener("touchstart", (e)=>{ e.preventDefault(); moveButton(); });
+    // IMPORTANT: no preventDefault here (can break audio start on some mobiles)
+    noBtn.addEventListener("touchstart", moveButton, { passive: true });
 
     // Floating hearts
     setInterval(() => {
