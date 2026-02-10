@@ -3,6 +3,7 @@
 <head>
 <title>Will You Be My Valentine?</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <style>
 body {
   margin:0;
@@ -36,10 +37,18 @@ button {
   border:none;
   border-radius:12px;
   cursor:pointer;
+  transition: 0.3s;
 }
 
-#yes { background:#ff4d6d; color:white; }
-#no { background:#ccc; }
+#yes {
+  background:#ff4d6d;
+  color:white;
+}
+
+#no {
+  background:#eee;
+  color:#333;
+}
 
 .footer {
   position:fixed;
@@ -49,7 +58,7 @@ button {
   font-size:14px;
 }
 
-/* floating hearts */
+/* Floating hearts */
 .heart {
   position:fixed;
   bottom:-20px;
@@ -83,20 +92,20 @@ button {
 <h3>Will you be my Valentine? 💖</h3>
 
 <button id="yes" onclick="yesClick()">Yes 💕</button>
-<button id="no" onmouseover="moveButton()">No 😜</button>
+<button id="no" onmouseover="moveButton()" onclick="moveButton()">Surely not!</button>
 
 <div class="footer">
   With lots of Love,<br>
-  <b>SANJAY KUMAR 💘</b>
+  <b>U R PURUSHAN SANJAY 💘</b>
 </div>
 
 </div>
 
 <script>
 
+// MUSIC START (Mobile friendly)
 const bgm = document.getElementById("bgm");
 
-// Start music after first tap (browser rule)
 function startMusic() {
   bgm.volume = 0.9;
   bgm.play().catch(() => {});
@@ -105,6 +114,8 @@ function startMusic() {
 document.addEventListener("click", startMusic, { once: true });
 document.addEventListener("touchstart", startMusic, { once: true });
 
+
+// YES BUTTON FINAL MESSAGE
 function yesClick() {
   document.getElementById("mainContent").innerHTML = `
     <h1 style="margin-top:100px;">My Baby Queen Said Yes 👑💘</h1>
@@ -112,7 +123,8 @@ function yesClick() {
     <p style="font-size:18px;">
       From the moment you came into my life,<br>
       everything became beautiful.<br><br>
-      I will love you, protect you, and stand by you forever 💖
+      I will love you, protect you, respect you,<br>
+      and stand by you forever 💖
     </p>
     <p>
       Forever yours,<br>
@@ -121,14 +133,46 @@ function yesClick() {
   `;
 }
 
+
+// NO BUTTON MAGIC
+let yesSize = 18;
+let noCount = 0;
+
+const noMessages = [
+  "Surely not!",
+  "Give it another thought!",
+  "Are you sure? 🥺",
+  "Baby please 😭",
+  "Don't break my heart 💔",
+  "Last chance 😳",
+  "Think again 😌",
+  "You can’t catch me 😜",
+  "No button is shy 🙈",
+  "Still no? 😭"
+];
+
 function moveButton() {
-  var button = document.getElementById("no");
-  button.style.position = "absolute";
-  button.style.left = Math.random() * (window.innerWidth - 100) + "px";
-  button.style.top = Math.random() * (window.innerHeight - 50) + "px";
+  const noBtn = document.getElementById("no");
+  const yesBtn = document.getElementById("yes");
+
+  // Change text
+  noBtn.textContent = noMessages[noCount % noMessages.length];
+  noCount++;
+
+  // Move randomly
+  noBtn.style.position = "absolute";
+  noBtn.style.left = Math.random() * (window.innerWidth - 160) + "px";
+  noBtn.style.top  = Math.random() * (window.innerHeight - 80) + "px";
+
+  // Grow YES button
+  yesSize += 6;
+  yesBtn.style.fontSize = yesSize + "px";
+  yesBtn.style.padding =
+      (15 + yesSize/5) + "px " + (30 + yesSize/3) + "px";
 }
 
-/* floating hearts */
+
+// FLOATING HEARTS
 setInterval(function(){
   var heart = document.createElement("div");
   heart.className = "heart";
