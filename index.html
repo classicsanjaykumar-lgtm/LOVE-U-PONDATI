@@ -1,190 +1,207 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Will You Be My Valentine?</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Will You Be My Valentine?</title>
 
-<style>
-body {
-  margin:0;
-  text-align:center;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(180deg,#ffe6f0,#ffffff);
-  overflow:hidden;
-}
+  <style>
+    body{
+      margin:0;
+      text-align:center;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(180deg,#ffe6f0,#ffffff);
+      overflow:hidden;
+    }
 
-h1 { margin-top:60px; }
+    h1{ margin-top:55px; padding:0 12px; }
+    h2,h3{ padding:0 12px; }
 
-.photo {
-  margin:20px auto;
-  width:200px;
-  height:200px;
-  border-radius:50%;
-  overflow:hidden;
-  border:5px solid #ff4d6d;
-}
+    .photo{
+      margin:18px auto;
+      width:200px;
+      height:200px;
+      border-radius:50%;
+      overflow:hidden;
+      border:5px solid #ff4d6d;
+      box-shadow: 0 10px 30px rgba(255,77,109,.25);
+    }
+    .photo img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
 
-.photo img {
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
+    .buttons{
+      display:flex;
+      justify-content:center;
+      gap:14px;
+      flex-wrap:wrap;
+      padding: 10px 14px;
+      position:relative;
+      z-index:2;
+    }
 
-button {
-  padding:15px 30px;
-  font-size:18px;
-  margin:15px;
-  border:none;
-  border-radius:12px;
-  cursor:pointer;
-  transition: 0.3s;
-}
+    button{
+      padding:15px 30px;
+      font-size:18px;
+      border:none;
+      border-radius:12px;
+      cursor:pointer;
+      transition: transform .2s, font-size .2s, padding .2s;
+      user-select:none;
+    }
 
-#yes {
-  background:#ff4d6d;
-  color:white;
-}
+    #yes{ background:#ff4d6d; color:#fff; }
+    #yes:active{ transform: scale(.98); }
 
-#no {
-  background:#eee;
-  color:#333;
-}
+    #no{ background:#eee; color:#333; }
 
-.footer {
-  position:fixed;
-  bottom:15px;
-  left:0;
-  right:0;
-  font-size:14px;
-}
+    .footer{
+      position:fixed;
+      bottom:15px;
+      left:0;
+      right:0;
+      font-size:14px;
+      opacity:.9;
+      z-index:2;
+    }
 
-/* Floating hearts */
-.heart {
-  position:fixed;
-  bottom:-20px;
-  font-size:20px;
-  animation: floatUp linear forwards;
-}
-
-@keyframes floatUp {
-  from { transform:translateY(0); opacity:1; }
-  to { transform:translateY(-110vh); opacity:0; }
-}
-</style>
+    .heart{
+      position:fixed;
+      bottom:-20px;
+      font-size:20px;
+      animation: floatUp linear forwards;
+      z-index:1;
+      pointer-events:none;
+    }
+    @keyframes floatUp{
+      from{ transform:translateY(0); opacity:1; }
+      to{ transform:translateY(-110vh); opacity:0; }
+    }
+  </style>
 </head>
 
 <body>
+  <!-- Tip: make sure these files exist in the SAME folder as this HTML:
+       - song.mp3
+       - her.jpg.jpeg (or rename to her.jpg to avoid double extensions)
+  -->
+  <audio id="bgm" preload="auto" loop>
+    <source src="song.mp3" type="audio/mpeg" />
+  </audio>
 
-<!-- Background Music -->
-<audio id="bgm" preload="auto" loop>
-  <source src="song.mp3" type="audio/mpeg">
-</audio>
+  <div id="mainContent">
+    <h1>LOVE YOU PONDATI (BABY MA)... ❤️</h1>
+    <h2>SIVA SANKARE ❤️</h2>
 
-<div id="mainContent">
+    <div class="photo">
+      <img src="her.jpg.jpeg" alt="Her Photo" />
+    </div>
 
-<h1>LOVE YOU PONDATI (BABY MA)... ❤️</h1>
-<h2>SIVA SANKARE ❤️</h2>
+    <h3>Will you be my Valentine? 💖</h3>
 
-<div class="photo">
-  <img src="her.jpg.jpeg" alt="Her Photo">
-</div>
+    <div class="buttons">
+      <button id="yes">Yes 💕</button>
+      <button id="no">Surely not!</button>
+    </div>
 
-<h3>Will you be my Valentine? 💖</h3>
+    <div class="footer">
+      With lots of Love,<br />
+      <b>SANJAY KUMAR 💘</b>
+    </div>
+  </div>
 
-<button id="yes" onclick="yesClick()">Yes 💕</button>
-<button id="no" onmouseover="moveButton()" onclick="moveButton()">Surely not!</button>
+  <script>
+    // Music (mobile-friendly: starts after first tap/click)
+    const bgm = document.getElementById("bgm");
+    function startMusic(){
+      bgm.volume = 0.9;
+      bgm.play().catch(()=>{});
+    }
+    document.addEventListener("click", startMusic, { once:true });
+    document.addEventListener("touchstart", startMusic, { once:true });
 
-<div class="footer">
-  With lots of Love,<br>
-  <b>SANJAY KUMAR 💘</b>
-</div>
+    // YES button final message
+    const yesBtn = document.getElementById("yes");
+    yesBtn.addEventListener("click", () => {
+      document.getElementById("mainContent").innerHTML = `
+        <h1 style="margin-top:90px; padding:0 12px;">My Baby Queen Said Yes 👑💘</h1>
+        <h2 style="padding:0 12px;">I Am The Luckiest Man Alive ❤️</h2>
+        <p style="font-size:18px; padding:0 14px; line-height:1.55;">
+          From the moment you came into my life,<br>
+          everything became beautiful.<br><br>
+          I will love you, protect you, respect you,<br>
+          and stand by you forever 💖
+        </p>
+        <p style="padding:0 14px;">
+          Forever yours,<br>
+          <b>U R PURUSHAN SANJAY 💘</b>
+        </p>
+      `;
+    });
 
-</div>
+    // NO button magic (kept inside screen!)
+    let yesSize = 18;
+    let noCount = 0;
 
-<script>
+    const noMessages = [
+      "NO!",
+      "Give it another thought!",
+      "Are you sure? 🥺",
+      "Baby please 😭",
+      "Don't break my heart 💔",
+      "Last chance 😳",
+      "Think again 😌",
+      "Noooo Please 😌",
+      "You can’t catch me 😜",
+      "No button is shy 🙈",
+      "Still no? 😭"
+    ];
 
-// MUSIC START (Mobile friendly)
-const bgm = document.getElementById("bgm");
+    const noBtn = document.getElementById("no");
 
-function startMusic() {
-  bgm.volume = 0.9;
-  bgm.play().catch(() => {});
-}
+    function moveButton(){
+      // Change text
+      noBtn.textContent = noMessages[noCount % noMessages.length];
+      noCount++;
 
-document.addEventListener("click", startMusic, { once: true });
-document.addEventListener("touchstart", startMusic, { once: true });
+      // Move randomly but keep on-screen
+      noBtn.style.position = "fixed";
 
+      const padding = 10;
+      const rect = noBtn.getBoundingClientRect();
+      const maxX = window.innerWidth - rect.width - padding;
+      const maxY = window.innerHeight - rect.height - padding;
 
-// YES BUTTON FINAL MESSAGE
-function yesClick() {
-  document.getElementById("mainContent").innerHTML = `
-    <h1 style="margin-top:100px;">My Baby Queen Said Yes 👑💘</h1>
-    <h2>I Am The Luckiest Man Alive ❤️</h2>
-    <p style="font-size:18px;">
-      From the moment you came into my life,<br>
-      everything became beautiful.<br><br>
-      I will love you, protect you, respect you,<br>
-      and stand by you forever 💖
-    </p>
-    <p>
-      Forever yours,<br>
-      <b>U R PURUSHAN SANJAY 💘</b>
-    </p>
-  `;
-}
+      const x = Math.max(padding, Math.random() * maxX);
+      const y = Math.max(padding, Math.random() * maxY);
 
+      noBtn.style.left = x + "px";
+      noBtn.style.top  = y + "px";
 
-// NO BUTTON MAGIC
-let yesSize = 18;
-let noCount = 0;
+      // Grow YES button
+      yesSize += 6;
+      yesBtn.style.fontSize = yesSize + "px";
+      yesBtn.style.padding =
+        (15 + yesSize/5) + "px " + (30 + yesSize/3) + "px";
+    }
 
-const noMessages = [
-  "NO!",
-  "Give it another thought!",
-  "Are you sure? 🥺",
-  "Baby please 😭",
-  "Don't break my heart 💔",
-  "Last chance 😳",
-  "Think again 😌",
-  "Noooo Please 😌",
-  "You can’t catch me 😜",
-  "No button is shy 🙈",
-  "Still no? 😭"
-];
+    noBtn.addEventListener("mouseover", moveButton);
+    noBtn.addEventListener("click", moveButton);
+    noBtn.addEventListener("touchstart", (e)=>{ e.preventDefault(); moveButton(); });
 
-function moveButton() {
-  const noBtn = document.getElementById("no");
-  const yesBtn = document.getElementById("yes");
-
-  // Change text
-  noBtn.textContent = noMessages[noCount % noMessages.length];
-  noCount++;
-
-  // Move randomly
-  noBtn.style.position = "absolute";
-  noBtn.style.left = Math.random() * (window.innerWidth - 160) + "px";
-  noBtn.style.top  = Math.random() * (window.innerHeight - 80) + "px";
-
-  // Grow YES button
-  yesSize += 6;
-  yesBtn.style.fontSize = yesSize + "px";
-  yesBtn.style.padding =
-      (15 + yesSize/5) + "px " + (30 + yesSize/3) + "px";
-}
-
-
-// FLOATING HEARTS
-setInterval(function(){
-  var heart = document.createElement("div");
-  heart.className = "heart";
-  heart.innerHTML = "❤️";
-  heart.style.left = Math.random()*100 + "vw";
-  heart.style.animationDuration = (3 + Math.random()*3) + "s";
-  document.body.appendChild(heart);
-  setTimeout(function(){ heart.remove(); },6000);
-},500);
-
-</script>
-
+    // Floating hearts
+    setInterval(() => {
+      const heart = document.createElement("div");
+      heart.className = "heart";
+      heart.textContent = "❤️";
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.animationDuration = (3 + Math.random() * 3) + "s";
+      document.body.appendChild(heart);
+      setTimeout(()=>heart.remove(), 6000);
+    }, 450);
+  </script>
 </body>
 </html>
