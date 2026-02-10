@@ -36,7 +36,7 @@ button {
 
 <body>
 
-<h1>Hi YOUR_WIFE_NAME ❤️</h1>
+<h1>LOVE YOU PONDATI SIVA SANKARE ❤️</h1>
 <h2>Will you be my Valentine? 💖</h2>
 
 <button id="yes" onclick="yesClick()">Yes 💕</button>
